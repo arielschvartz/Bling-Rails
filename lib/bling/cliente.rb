@@ -9,7 +9,7 @@ module Bling
     attr_accessor :endereco, :numero, :complemento, :cidade, :bairro, :cep, :uf
 
     # Extra
-    attr_accessor :cnpj, :ie, :rg, :tipo_pessoa
+    attr_accessor :cnpj, :cpf, :cpf_cnpj, :ie, :rg, :ie_rg, :tipo_pessoa, :fone
 
     def initialize json = {}
       @json = json
@@ -32,6 +32,10 @@ module Bling
         case attr
         when :tipo_pessoa
           key = attr.to_s.camelize(:lower)
+        when :ie_rg
+          key = 'ie_rg'
+        when :cpf_cnpj
+          key = 'cpf_cnpj'
         end
 
         hash[key] = value
@@ -41,7 +45,7 @@ module Bling
     end
 
     def all_variables
-      [:nome, :email, :endereco, :numero, :complemento, :cidade, :bairro, :cep, :uf, :cnpj, :ie, :rg, :tipo_pessoa]
+      [:nome, :email, :endereco, :numero, :complemento, :cidade, :bairro, :cep, :uf, :cnpj, :cpf, :ie, :rg, :tipo_pessoa, :fone]
     end
   end
 end

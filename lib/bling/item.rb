@@ -6,11 +6,13 @@ module Bling
     attr_accessor :codigo, :descricao
 
     # Valores
-    attr_reader :valor_unidade, :preco_custo, :desconto_item
+    attr_reader :valor_unidade, :vlr_unit, :preco_custo, :desconto_item
 
     # Other
-    attr_reader :quantidade
+    attr_reader :quantidade, :qtde
     attr_accessor :un
+
+    attr_accessor :class_fiscal, :tipo, :origem
 
     def initialize json = {}
       @json = json
@@ -24,7 +26,7 @@ module Bling
       end
     end
 
-    [:valor_unidade, :preco_custo, :desconto_item].each do |attr|
+    [:valor_unidade, :preco_custo, :desconto_item, :vlr_unit].each do |attr|
       define_method "#{attr}=".to_sym do |value|
         if value.is_a? String
           value = value.to_f
@@ -42,6 +44,14 @@ module Bling
       @quantidade = value
     end
 
+    def qtde= value
+      if value.is_a? String
+        value = value.to_i
+      end
+
+      @qtde = value
+    end
+
     def to_post_hash
       hash = {}
 
@@ -54,16 +64,19 @@ module Bling
           key = :vlr_unit
         when :quantidade
           key = :qtde
+        when :class_fiscal
+          key = :class_fiscal
         end
 
         hash[key] = value
       end
 
-      { 'item' => hash }
+      # { 'item' => hash }
+      hash
     end
 
     def all_variables
-      [:codigo, :descricao, :valor_unidade, :preco_custo, :desconto_item, :quantidade, :un]
+      [:codigo, :descricao, :valor_unidade, :preco_custo, :desconto_item, :quantidade, :un, :class_fiscal, :tipo, :origem]
     end
   end
 end

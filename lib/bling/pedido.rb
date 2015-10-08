@@ -58,7 +58,7 @@ module Bling
     def itens= value
       return unless value.is_a? Array
 
-      @itens = value.map { |i| Item.new(i['item']) }
+      @itens = value.map { |i| Item.new(i) }
     end
 
     def parcelas= value

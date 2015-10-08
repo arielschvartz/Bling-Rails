@@ -22,7 +22,7 @@ module Bling
     attr_accessor :unidade, :gtin, :gtin_embalagem, :image_thumbnail, :descricao_complementar
 
     # Para o Cadastro
-    attr_accessor :class_fiscal, :origem, :estoque, :error_variable
+    attr_accessor :class_fiscal, :origem, :estoque, :error_variable, :tipo
 
     def initialize json = {}
       @json = json
@@ -69,7 +69,9 @@ module Bling
       @origem = value
     end
 
-    def create hash = nil
+    def create hash = nil, gerarnfe = nil
+      raise BlingError.new({'msg' => "#{self.error_variable.capitalize} não pode ficar em branco."}) unless self.can_create?
+
       raise BlingError.new({'msg' => "Origem não é válida."}) unless self.valid_code?
 
       begin
@@ -158,7 +160,7 @@ module Bling
     end
 
     def all_variables
-      [:codigo, :descricao, :preco, :preco_custo, :peso_liq, :peso_bruto, :estoque_minimo, :estoque_maximo, :largura_produto, :altura_produto, :profundidade_produto, :data_inclusao, :data_alteracao, :unidade, :gtin, :gtin_embalagem, :image_thumbnail, :descricao_complementar]
+      [:codigo, :descricao, :preco, :preco_custo, :peso_liq, :peso_bruto, :estoque_minimo, :estoque_maximo, :largura_produto, :altura_produto, :profundidade_produto, :data_inclusao, :data_alteracao, :unidade, :gtin, :gtin_embalagem, :image_thumbnail, :descricao_complementar, :tipo]
     end
 
     def register_variables

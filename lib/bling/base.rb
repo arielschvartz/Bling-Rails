@@ -44,15 +44,15 @@ module Bling
         end
       end
 
-      element.create
+      element.create nil, hash[:gerarnfe]
     end
 
-    def create hash = nil
+    def create hash = nil, gerarnfe = nil
       raise BlingError.new({'msg' => "#{self.error_variable.capitalize} não pode ficar em branco."}) unless self.can_create?
 
       hash ||= self.to_post_hash
 
-      response = Bling.post("#{self.class.object_type}", hash)
+      response = Bling.post("#{self.class.object_type}", hash, gerarnfe)
 
       unless response['retorno']['erros'].present?
         self.update_identifier(response) if self.respond_to? :update_identifier

@@ -47,12 +47,44 @@ module Bling
     HTTParty.get "#{api_url(path)}/json/", query: { apikey: ENV['BLING_API_KEY'] }
   end
 
-  def self.post path, body = nil
+  def self.post path, body = nil, gerarnfe = nil
     unless body.is_a? Hash
       body = {}
     end
 
-    HTTParty.post api_url(path), query: { apikey: ENV['BLING_API_KEY'] }, body: { xml: body.to_xml(dasherize: false) }
+    xml = nil
+    if body['pedido']
+      xml = body['pedido'].to_xml(root: 'pedido', dasherize: false).gsub('iten>', 'item>')
+    elsif body['produto']
+      xml = body['produto'].to_xml(root: 'produto', dasherize: false)
+    elsif body['']
+    end
+
+    options = {
+      query: {
+        apikey: ENV['BLING_API_KEY']
+      },
+      body: {
+        xml: xml
+      }
+    }
+
+    if gerarnfe
+      options[:body].merge! gerarnfe: 'true'
+    end
+
+    if Rails.env.development?
+      puts options
+    end
+
+    response = HTTParty.post api_url(path), options
+
+    if Rails.env.development?
+      puts "Corpo da resposta: #{response.body}"
+      puts "Corpo do envio: #{response.request.options[:body]}"
+    end
+
+    response
   end
 
   def self.put path, body = nil
